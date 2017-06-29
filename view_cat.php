@@ -1,5 +1,10 @@
 <?php
+
 include_once "/include/db_connect.php";
+include_once "/functions/functions.php";
+
+$cat = clear_string($_GET["cat"]);
+$type = clear_string($_GET["type"]);
 
 $sorting = $_GET["sort"];
 
@@ -63,29 +68,52 @@ switch ($sorting)
       ?>
     </div>
     <div id="block-content">
-      <div id="block-sorting">
-        <p id="nav-breadcrumbs"><a href="index.php">Главная страница</a> \ <span>Все товары</span><p>
-          <ul id="options-list">
-            <li>Вид: </li>
-            <li><img id="style-grid" src="/images/icon-grid-active.png" /></li>
-            <li><img id="style-list" src="/images/icon-list.png" /></li>
-            <li>Сортировка:</li>
-            <li><a id="select-sort"><?=$sort_name?></a>
-            <ul id="sorting-list">
-              <li><a href="index.php?sort=price-asc">От дешёвых к дорогим</a></li>
-              <li><a href="index.php?sort=price-desc">От дорогих к дешёвым</a></li>
-              <li><a href="index.php?sort=popular">Популярные</a></li>
-              <li><a href="index.php?sort=news">Новинки</a></li>
-              <li><a href="index.php?sort=brand">От А до Я</a></li>
-            </ul>
-            </li>
-          </ul>
-      </div>
-      <ul id="block-tovar-grid">
+
+
       <?php
-      $result = mysql_query("SELECT * FROM table_products WHERE visible='1' ORDER BY $sorting", $link );
+      if (!empty($cat) && !empty($type))
+      {
+        $querycat = "AND brand='$cat' AND type_tovara='$type'";
+        $catlink = "cat=$cat&";
+      } else
+      {
+        if(!empty($type))
+        {
+          $querycat = "AND type_tovara='$type'";
+        } else {
+          $querycat = "";
+        }
+        if(!empty($cat))
+        {
+          $catlink = "cat=$cat&";
+        } else {
+          $catlink = "";
+        }
+
+      }
+      $result = mysql_query("SELECT * FROM table_products WHERE visible='1' $querycat ORDER BY $sorting", $link );
       if (mysql_num_rows($result) > 0){
         $row =  mysql_fetch_array($result);
+        echo '<div id="block-sorting">
+          <p id="nav-breadcrumbs"><a href="index.php">Главная страница</a> \ <span>Все товары</span><p>
+            <ul id="options-list">
+              <li>Вид: </li>
+              <li><img id="style-grid" src="/images/icon-grid-active.png" /></li>
+              <li><img id="style-list" src="/images/icon-list.png" /></li>
+              <li>Сортировка:</li>
+              <li><a id="select-sort">'.$sort_name.'</a>
+              <ul id="sorting-list">
+                <li><a href="view_cat.php?'.$catlink.'type='.$type.'&sort=price-asc">От дешёвых к дорогим</a></li>
+                <li><a href="view_cat.php?'.$catlink.'type='.$type.'&sort=price-desc">От дорогих к дешёвым</a></li>
+                <li><a href="view_cat.php?'.$catlink.'type='.$type.'&sort=popular">Популярные</a></li>
+                <li><a href="view_cat.php?'.$catlink.'type='.$type.'&sort=news">Новинки</a></li>
+                <li><a href="view_cat.php?'.$catlink.'type='.$type.'&sort=brand">От А до Я</a></li>
+              </ul>
+              </li>
+            </ul>
+        </div>
+        <ul id="block-tovar-grid">
+        ';
         do {
           if  ($row["image"] != "" && file_exists("./uploads_images/".$row["image"]))
               {
@@ -125,13 +153,13 @@ switch ($sorting)
           ';
         }
         while ($row =  mysql_fetch_array($result));
-      }
+      //}88888
       ?>
     </ul>
 
     <ul id="block-tovar-list">
     <?php
-    $result = mysql_query("SELECT * FROM table_products WHERE visible='1' ORDER BY $sorting", $link );
+    $result = mysql_query("SELECT * FROM table_products WHERE visible='1' $querycat ORDER BY $sorting", $link );
     if (mysql_num_rows($result) > 0){
       $row =  mysql_fetch_array($result);
       do {
@@ -174,6 +202,10 @@ switch ($sorting)
       }
       while ($row =  mysql_fetch_array($result));
     }
+  } //*********
+  else {
+    echo '<h2>Категория не доступна или не создана!</h2>';
+  }
     ?>
   </ul>
     </div>

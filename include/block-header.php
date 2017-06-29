@@ -9,17 +9,17 @@
     <p id="reg-auth-title" aling="right"><a class="top-auth">Вход</a><a href="registration.php">Регистрация</a></p>
   </div>
 
-  <div id="top-line"></div>
-  <img id="img-logo" src="images/logo.png" />
-
-  <div id="persinal-info">
-    <p align="right">Просто позвоните нам!</p>
-    <h3 align="right">222-33-44</h3>
-    <img src="" />
-    <p align="right">Режим работы:</p>
-    <p align="right">Будние дни: с 8 до 10</p>
-    <p align="right">Суббота, Воскресенье - выходные</p>
-    <img id="img-logo" src="" />
+  <!-- Логотип -->
+  <img id="img-logo" src="/images/logo.png" />
+  <!-- Информационный блок -->
+  <div id="personal-info">
+  <p align="right">Звонок бесплатный.</p>
+  <h3 align="right">8 (800) 100-12-34</h3>
+   <img src="/images/phone-icon.png" />
+  <p align="right">Режим работы:</p>
+  <p align="right">Будние дни: с 9:00 до 18:00</p>
+  <p align="right">Суббота, Воскресенье - выходные</p>
+   <img src="/images/time-icon.png" />
   </div>
   <div id="block-search">
     <form method="GET" action="search.php?q=">

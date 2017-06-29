@@ -1,7 +1,12 @@
+body {
+  background-color: #9AD46D;
+}
+
 #block-body{
     width: 1035px;
     height:  auto;
     margin: 0 auto;
+    background-color: white;
 }
 #block-header{
     width: 1035px;

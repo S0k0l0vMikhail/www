@@ -1,46 +1,17 @@
 <?php
+
 include_once "/include/db_connect.php";
+include_once "/functions/functions.php";
 
-$sorting = $_GET["sort"];
+$cat = clear_string($_GET["cat"]);
+$type = clear_string($_GET["type"]);
 
-switch ($sorting)
-{
-    case 'price-asc';
-    $sorting = 'price ASC';
-    $sort_name = 'От дешевых к дорогим';
-    break;
-
-    case 'price-desc';
-    $sorting = 'price DESC';
-    $sort_name = 'От дорогих к дешевым';
-    break;
-
-    case 'popular';
-    $sorting = 'count DESC';
-    $sort_name = 'Популярное';
-    break;
-
-    case 'news';
-    $sorting = 'datetime DESC';
-    $sort_name = 'Новинки';
-    break;
-
-    case 'brand';
-    $sorting = 'brand';
-    $sort_name = 'Новинки';
-    break;
-
-    default:
-    $sorting = 'products_id DESC';
-    $sort_name = 'Нет сортировки';
-    break;
-}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf8">
-  <title>Интернет магазин</title>
+  <title>Поиск по параметрам</title>
   <link rel="stylesheet" type="text/css" href="/css/reset.css">
   <link rel="stylesheet" type="text/css" href="/css/style.css">
   <link rel="stylesheet" type="text/css" href="/trackbar/trackbar.css">
@@ -63,29 +34,50 @@ switch ($sorting)
       ?>
     </div>
     <div id="block-content">
-      <div id="block-sorting">
-        <p id="nav-breadcrumbs"><a href="index.php">Главная страница</a> \ <span>Все товары</span><p>
-          <ul id="options-list">
-            <li>Вид: </li>
-            <li><img id="style-grid" src="/images/icon-grid-active.png" /></li>
-            <li><img id="style-list" src="/images/icon-list.png" /></li>
-            <li>Сортировка:</li>
-            <li><a id="select-sort"><?=$sort_name?></a>
-            <ul id="sorting-list">
-              <li><a href="index.php?sort=price-asc">От дешёвых к дорогим</a></li>
-              <li><a href="index.php?sort=price-desc">От дорогих к дешёвым</a></li>
-              <li><a href="index.php?sort=popular">Популярные</a></li>
-              <li><a href="index.php?sort=news">Новинки</a></li>
-              <li><a href="index.php?sort=brand">От А до Я</a></li>
-            </ul>
-            </li>
-          </ul>
-      </div>
-      <ul id="block-tovar-grid">
+
+
       <?php
-      $result = mysql_query("SELECT * FROM table_products WHERE visible='1' ORDER BY $sorting", $link );
+      if ($_GET["brand"])
+        {
+            $check_brand = implode(',',$_GET["brand"]);
+        }
+
+        $start_price = (int)$_GET["start_price"];
+        $end_price = (int)$_GET["end_price"];
+
+
+        if (!empty($check_brand) OR !empty($end_price))
+        {
+
+          if (!empty($check_brand)) $query_brand = " AND brand_id IN($check_brand)";
+          if (!empty($end_price)) $query_price = " AND price BETWEEN $start_price AND $end_price";
+
+
+        }
+
+      $result = mysql_query("SELECT * FROM table_products WHERE visible='1' $query_brand $query_price ORDER BY products_id DESC", $link );
       if (mysql_num_rows($result) > 0){
         $row =  mysql_fetch_array($result);
+        echo '<div id="block-sorting">
+          <p id="nav-breadcrumbs"><a href="index.php">Главная страница</a> \ <span>Все товары</span><p>
+            <ul id="options-list">
+              <li>Вид: </li>
+              <li><img id="style-grid" src="/images/icon-grid-active.png" /></li>
+              <li><img id="style-list" src="/images/icon-list.png" /></li>
+              <li>Сортировка:</li>
+              <li><a id="select-sort">'.$sort_name.'</a>
+              <ul id="sorting-list">
+                <li><a href="view_cat.php?'.$catlink.'type='.$type.'&sort=price-asc">От дешёвых к дорогим</a></li>
+                <li><a href="view_cat.php?'.$catlink.'type='.$type.'&sort=price-desc">От дорогих к дешёвым</a></li>
+                <li><a href="view_cat.php?'.$catlink.'type='.$type.'&sort=popular">Популярные</a></li>
+                <li><a href="view_cat.php?'.$catlink.'type='.$type.'&sort=news">Новинки</a></li>
+                <li><a href="view_cat.php?'.$catlink.'type='.$type.'&sort=brand">От А до Я</a></li>
+              </ul>
+              </li>
+            </ul>
+        </div>
+        <ul id="block-tovar-grid">
+        ';
         do {
           if  ($row["image"] != "" && file_exists("./uploads_images/".$row["image"]))
               {
@@ -125,13 +117,13 @@ switch ($sorting)
           ';
         }
         while ($row =  mysql_fetch_array($result));
-      }
+      //}88888
       ?>
     </ul>
 
     <ul id="block-tovar-list">
     <?php
-    $result = mysql_query("SELECT * FROM table_products WHERE visible='1' ORDER BY $sorting", $link );
+    $result = mysql_query("SELECT * FROM table_products WHERE visible='1' $query_brand $query_price ORDER BY products_id DESC", $link );
     if (mysql_num_rows($result) > 0){
       $row =  mysql_fetch_array($result);
       do {
@@ -174,6 +166,10 @@ switch ($sorting)
       }
       while ($row =  mysql_fetch_array($result));
     }
+  } //*********
+  else {
+    echo '<h2>Категория не доступна или не создана!</h2>';
+  }
     ?>
   </ul>
     </div>

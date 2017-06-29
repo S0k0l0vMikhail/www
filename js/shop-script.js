@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+// прокручивающийся блок новостей
   $("#newsticker").jCarouselLite({
    vertical: true, //вертикальная или горизонтальная
    hoverPause:true, //пауза прокрутки при наведении
@@ -10,6 +11,8 @@ $(document).ready(function() {
    speed:500 //
 });
 
+
+// вывод на главную страницу (по два или списком)
 $("#style-grid").click(function(){
 $("#block-tovar-list").hide();
 $("#block-tovar-grid").show();
@@ -42,4 +45,30 @@ else {
 $("#select-sort").click(function(){
   $("#sorting-list").slideToggle(200);
 });
+
+// скрывает и запоминает блоки в выоде категорий 
+$('#block-category > ul > li > a').click(function(){
+
+            if ($(this).attr('class') != 'active'){
+
+			$('#block-category > ul > li > ul').slideUp(400);
+            $(this).next().slideToggle(400);
+
+                    $('#block-category > ul > li > a').removeClass('active');
+					$(this).addClass('active');
+                    $.cookie('select_cat', $(this).attr('id'));
+
+				}else
+                {
+
+                    $('#block-category > ul > li > a').removeClass('active');
+                    $('#block-category > ul > li > ul').slideUp(400);
+                    $.cookie('select_cat', '');
+                }
+});
+
+if ($.cookie('select_cat') != '')
+{
+$('#block-category > ul > li > #'+$.cookie('select_cat')).addClass('active').next().show();
+}
 });
