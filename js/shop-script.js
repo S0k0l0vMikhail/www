@@ -46,7 +46,7 @@ $("#select-sort").click(function(){
   $("#sorting-list").slideToggle(200);
 });
 
-// скрывает и запоминает блоки в выоде категорий 
+// скрывает и запоминает блоки в выоде категорий
 $('#block-category > ul > li > a').click(function(){
 
             if ($(this).attr('class') != 'active'){
@@ -71,4 +71,22 @@ if ($.cookie('select_cat') != '')
 {
 $('#block-category > ul > li > #'+$.cookie('select_cat')).addClass('active').next().show();
 }
+
+$('#genpass').click(function(){
+$.ajax({
+type: "POST",
+url: "/functions/genpass.php",
+dataType: "html",
+cache: false,
+success: function(data) {
+$('#reg_pass').val(data);
+}
+});
+
+});
+
+$('#reloadcaptcha').click(function(){
+$('#block-captcha > img').attr("src","/reg/reg_captcha.php?r="+ Math.random());
+});
+
 });
