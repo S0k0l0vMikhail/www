@@ -2,7 +2,10 @@
 
 include_once "/include/db_connect.php";
 include_once "/functions/functions.php";
+session_start();
+include("include/auth_cookie.php"); 
 
+  //unset($_SESSION['auth']);
 ?>
 <!DOCTYPE html>
 <html>

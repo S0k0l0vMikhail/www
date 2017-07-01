@@ -6,7 +6,21 @@
       <li><a href="magazine.php">Магазины</a></li>
       <li><a href="contacts.php">Контакты</a></li>
     </ul>
-    <p id="reg-auth-title" aling="right"><a class="top-auth">Вход</a><a href="registration.php">Регистрация</a></p>
+    <?php
+
+    if ($_SESSION['auth'] == 'yes_auth')
+    {
+
+     echo '<p id="auth-user-info" align="right"><img src="/images/user.png" />Здравствуйте, '.$_SESSION['auth_name'].'!</p>';
+
+    }else{
+
+      echo '<p id="reg-auth-title" align="right"><a class="top-auth">Вход</a><a href="registration.php">Регистрация</a></p>';
+
+    }
+
+    ?>
+    <!--<p id="reg-auth-title" aling="right"><a class="top-auth">Вход</a><a href="registration.php">Регистрация</a></p>-->
     <div id="block-top-auth">
       <div class="corner"></div>
       <form method="POST">
@@ -31,6 +45,15 @@
 
               </ul>
       </form>
+
+      <div id="block-remind">
+      <h3>Восстановление<br /> пароля</h3>
+      <p id="message-remind" class="message-remind-success" ></p>
+      <center><input type="text" id="remind-email" placeholder="Ваш E-mail" /></center>
+      <p align="right" id="button-remind" ><a>Готово</a></p>
+      <p align="right" class="auth-loading" ><img src="/images/loading.gif" /></p>
+      <p id="prev-auth">Назад</p>
+      </div>
     </div>
   </div>
 
@@ -39,7 +62,7 @@
   <!-- Информационный блок -->
   <div id="personal-info">
   <p align="right">Звонок бесплатный.</p>
-  <h3 align="right">8 (800) 100-12-34</h3>
+  <h3 align="right">222-33-44</h3>
    <img src="/images/phone-icon.png" />
   <p align="right">Режим работы:</p>
   <p align="right">Будние дни: с 9:00 до 18:00</p>

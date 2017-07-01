@@ -2,6 +2,8 @@
 
 include_once "/include/db_connect.php";
 include_once "/functions/functions.php";
+session_start();
+include("include/auth_cookie.php");
 
 $cat = clear_string($_GET["cat"]);
 $type = clear_string($_GET["type"]);
